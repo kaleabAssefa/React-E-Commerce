@@ -1,0 +1,115 @@
+.product-detail {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.product-detail--empty {
+  text-align: center;
+  padding-top: 80px;
+}
+
+.product-detail__back {
+  background: none;
+  border: none;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.product-detail__back:hover {
+  color: var(--color-clay);
+}
+
+.product-detail__layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 420px) 1fr;
+  gap: 40px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.product-detail__swatch {
+  min-height: 320px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.product-detail__specimen {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 6px 14px;
+  margin: 18px;
+  border-radius: 999px;
+}
+
+.product-detail__info {
+  padding: 32px 32px 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-detail__info h1 {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.product-detail__price {
+  color: var(--color-clay);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 0 0 12px;
+}
+
+.product-detail__blurb {
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.product-detail__facts {
+  display: flex;
+  gap: 28px;
+  margin: 0 0 28px;
+  padding: 18px 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.product-detail__fact dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+  margin-bottom: 4px;
+}
+
+.product-detail__fact dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.product-detail__info .btn {
+  align-self: flex-start;
+}
+
+@media (max-width: 720px) {
+  .product-detail__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .product-detail__info {
+    padding: 24px;
+  }
+
+  .product-detail__facts {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}

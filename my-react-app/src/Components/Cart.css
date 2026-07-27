@@ -1,0 +1,162 @@
+.cart {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.cart h1 {
+  font-size: 1.9rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.cart--empty {
+  text-align: center;
+  padding-top: 80px;
+}
+
+.cart--empty p {
+  color: var(--color-ink-soft);
+  margin-bottom: 24px;
+}
+
+.cart__list {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.cart__item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.cart__swatch {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+}
+
+.cart__name {
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.cart__unit-price {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
+
+.cart__quantity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.cart__qty-btn {
+  background: none;
+  border: none;
+  width: 24px;
+  height: 24px;
+  font-size: 1rem;
+  color: var(--color-forest);
+  border-radius: 50%;
+}
+
+.cart__qty-btn:hover {
+  background: var(--color-bg);
+}
+
+.cart__qty-value {
+  min-width: 18px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.cart__line-total {
+  font-weight: 600;
+  margin: 0;
+  min-width: 64px;
+  text-align: right;
+}
+
+.cart__remove {
+  background: none;
+  border: none;
+  color: var(--color-ink-soft);
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.cart__remove:hover {
+  color: var(--color-clay);
+}
+
+.cart__summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-top: 16px;
+}
+
+.cart__subtotal {
+  color: var(--color-clay);
+}
+
+.cart__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+@media (max-width: 640px) {
+  .cart__item {
+    grid-template-columns: 44px 1fr;
+    grid-template-areas:
+      'swatch details'
+      'swatch quantity'
+      'total total'
+      'remove remove';
+    row-gap: 8px;
+  }
+
+  .cart__swatch {
+    grid-area: swatch;
+    width: 44px;
+    height: 44px;
+  }
+
+  .cart__details {
+    grid-area: details;
+  }
+
+  .cart__quantity {
+    grid-area: quantity;
+    justify-self: start;
+  }
+
+  .cart__line-total {
+    grid-area: total;
+    text-align: left;
+  }
+
+  .cart__remove {
+    grid-area: remove;
+    justify-self: start;
+  }
+
+  .cart__actions {
+    flex-direction: column;
+  }
+}
