@@ -1,0 +1,12 @@
+.require-auth {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.require-auth p {
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+  margin: 12px 0 24px;
+}
