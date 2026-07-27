@@ -1,10 +1,9 @@
+import { useCart } from '../hooks/useCart.js'
 import './Cart.css'
 
-function Cart({ cartItems, onUpdateQuantity, onRemove, onNavigate }) {
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  )
+function Cart({ onNavigate }) {
+  const { items: cartItems, subtotal, updateQuantity, removeFromCart } =
+    useCart()
 
   if (cartItems.length === 0) {
     return (
@@ -39,7 +38,7 @@ function Cart({ cartItems, onUpdateQuantity, onRemove, onNavigate }) {
               <button
                 className="cart__qty-btn"
                 onClick={() =>
-                  onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))
+                  updateQuantity(item.id, Math.max(1, item.quantity - 1))
                 }
                 aria-label={`Decrease quantity of ${item.name}`}
               >
@@ -48,7 +47,7 @@ function Cart({ cartItems, onUpdateQuantity, onRemove, onNavigate }) {
               <span className="cart__qty-value">{item.quantity}</span>
               <button
                 className="cart__qty-btn"
-                onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                onClick={() => updateQuantity(item.id, item.quantity + 1)}
                 aria-label={`Increase quantity of ${item.name}`}
               >
                 +
@@ -61,7 +60,7 @@ function Cart({ cartItems, onUpdateQuantity, onRemove, onNavigate }) {
 
             <button
               className="cart__remove"
-              onClick={() => onRemove(item.id)}
+              onClick={() => removeFromCart(item.id)}
               aria-label={`Remove ${item.name} from cart`}
             >
               Remove

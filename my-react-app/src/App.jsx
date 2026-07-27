@@ -4,14 +4,24 @@ import ProductList from './components/ProductList.jsx'
 import ProductDetail from './components/ProductDetail.jsx'
 import Cart from './components/Cart.jsx'
 import Checkout from './components/Checkout.jsx'
-import products from './data/products.js'
+import Auth from './Components/Auth.jsx'
+import RequireAuth from './components/RequireAuth.jsx'
+import { useFetchProducts } from './hooks/useFetchProduct.js'
+import { useAuth } from './hooks/useAuth.js'
 import './App.css'
 
 function App() {
-  // Which section is visible: 'list' | 'detail' | 'cart' | 'checkout'
+  // Page switching is the one piece of state that stays local to App —
+  // it's pure UI navigation, not data the rest of the app needs to share.
+  // Products, cart, and auth all live in Redux instead (see src/store).
   const [currentPage, setCurrentPage] = useState('list')
   const [selectedProductId, setSelectedProductId] = useState(null)
-  const [cartItems, setCartItems] = useState([])
+  // Where to send the user after a successful login — 'list' unless they
+  // were bounced here from the protected checkout page.
+  const [postLoginPage, setPostLoginPage] = useState('list')
+
+  const { products, status } = useFetchProducts()
+  const { isAuthenticated } = useAuth()
 
   const selectedProduct =
     products.find((p) => p.id === selectedProductId) || null
@@ -21,51 +31,28 @@ function App() {
     setCurrentPage('detail')
   }
 
-  function handleAddToCart(product) {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id)
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        )
-      }
-      return [...prev, { ...product, quantity: 1 }]
-    })
-    setCurrentPage('cart')
+  function handleNavigate(page) {
+    setCurrentPage(page)
   }
 
-  function handleUpdateQuantity(productId, quantity) {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === productId ? { ...item, quantity } : item,
-      ),
-    )
+  function handleGoToLogin(redirectTo) {
+    setPostLoginPage(redirectTo || 'list')
+    setCurrentPage('login')
   }
-
-  function handleRemoveFromCart(productId) {
-    setCartItems((prev) => prev.filter((item) => item.id !== productId))
-  }
-
-  function handlePlaceOrder() {
-    setCartItems([])
-  }
-
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
     <div className="app">
       <Header
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
-        cartCount={cartCount}
+        onNavigate={handleNavigate}
+        onRequireLogin={() => handleGoToLogin('list')}
       />
 
       <main className="app__main">
         {currentPage === 'list' && (
           <ProductList
             products={products}
+            status={status}
             onSelectProduct={handleSelectProduct}
           />
         )}
@@ -73,26 +60,23 @@ function App() {
         {currentPage === 'detail' && (
           <ProductDetail
             product={selectedProduct}
-            onAddToCart={handleAddToCart}
             onBack={() => setCurrentPage('list')}
           />
         )}
 
-        {currentPage === 'cart' && (
-          <Cart
-            cartItems={cartItems}
-            onUpdateQuantity={handleUpdateQuantity}
-            onRemove={handleRemoveFromCart}
-            onNavigate={setCurrentPage}
-          />
-        )}
+        {currentPage === 'cart' && <Cart onNavigate={handleNavigate} />}
 
         {currentPage === 'checkout' && (
-          <Checkout
-            cartItems={cartItems}
-            onNavigate={setCurrentPage}
-            onPlaceOrder={handlePlaceOrder}
-          />
+          <RequireAuth
+            isAuthenticated={isAuthenticated}
+            onGoToLogin={() => handleGoToLogin('checkout')}
+          >
+            <Checkout onNavigate={handleNavigate} />
+          </RequireAuth>
+        )}
+
+        {currentPage === 'login' && (
+          <Auth onSuccess={() => setCurrentPage(postLoginPage)} />
         )}
       </main>
     </div>

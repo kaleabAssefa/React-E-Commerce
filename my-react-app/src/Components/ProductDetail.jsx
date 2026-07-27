@@ -1,6 +1,9 @@
+import { useCart } from '../hooks/useCart.js'
 import './ProductDetail.css'
 
-function ProductDetail({ product, onAddToCart, onBack }) {
+function ProductDetail({ product, onBack }) {
+  const { addToCart } = useCart()
+
   if (!product) {
     return (
       <section className="product-detail product-detail--empty">
@@ -50,7 +53,7 @@ function ProductDetail({ product, onAddToCart, onBack }) {
 
           <button
             className="btn btn--primary"
-            onClick={() => onAddToCart(product)}
+            onClick={() => addToCart(product)}
           >
             Add to cart
           </button>

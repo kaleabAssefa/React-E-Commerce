@@ -1,6 +1,27 @@
+import { useEffect, useState } from 'react'
 import './ProductList.css'
 
-function ProductList({ products, onSelectProduct }) {
+function ProductList({ products, status, onSelectProduct }) {
+  // Local UI-only state: what the shopper is typing/toggling right now.
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortByPrice, setSortByPrice] = useState(false)
+  const [visibleProducts, setVisibleProducts] = useState(products)
+
+  // Re-derive the visible list whenever the source data, the search box,
+  // or the sort toggle changes — a small useEffect-driven side effect
+  // rather than filtering inline in the render.
+  useEffect(() => {
+    let next = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.trim().toLowerCase()),
+    )
+
+    if (sortByPrice) {
+      next = [...next].sort((a, b) => a.price - b.price)
+    }
+
+    setVisibleProducts(next)
+  }, [products, searchTerm, sortByPrice])
+
   return (
     <section className="product-list">
       <div className="product-list__intro">
@@ -12,8 +33,44 @@ function ProductList({ products, onSelectProduct }) {
         </p>
       </div>
 
+      <div className="product-list__controls">
+        <input
+          type="search"
+          className="product-list__search"
+          placeholder="Search the catalog…"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search products"
+        />
+
+        <label className="product-list__sort">
+          <input
+            type="checkbox"
+            checked={sortByPrice}
+            onChange={(e) => setSortByPrice(e.target.checked)}
+          />
+          Sort by price
+        </label>
+      </div>
+
+      {status === 'loading' && (
+        <p className="product-list__status">Loading the catalog…</p>
+      )}
+
+      {status === 'failed' && (
+        <p className="product-list__status product-list__status--error">
+          Couldn&rsquo;t load the catalog. Try refreshing.
+        </p>
+      )}
+
+      {status === 'succeeded' && visibleProducts.length === 0 && (
+        <p className="product-list__status">
+          No specimens match &ldquo;{searchTerm}&rdquo;.
+        </p>
+      )}
+
       <div className="product-list__grid">
-        {products.map((product) => (
+        {visibleProducts.map((product) => (
           <button
             key={product.id}
             className="product-card"

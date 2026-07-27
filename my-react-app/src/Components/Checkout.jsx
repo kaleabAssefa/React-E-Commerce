@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useCart } from '../hooks/useCart.js'
 import './Checkout.css'
 
 const initialForm = {
@@ -9,14 +10,11 @@ const initialForm = {
   zip: '',
 }
 
-function Checkout({ cartItems, onNavigate, onPlaceOrder }) {
+function Checkout({ onNavigate }) {
+  const { items: cartItems, subtotal, clearCart } = useCart()
   const [form, setForm] = useState(initialForm)
   const [submitted, setSubmitted] = useState(false)
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  )
   const shipping = cartItems.length > 0 ? 6 : 0
   const total = subtotal + shipping
 
@@ -28,7 +26,7 @@ function Checkout({ cartItems, onNavigate, onPlaceOrder }) {
   function handleSubmit(e) {
     e.preventDefault()
     setSubmitted(true)
-    onPlaceOrder?.(form)
+    clearCart()
   }
 
   if (cartItems.length === 0 && !submitted) {
